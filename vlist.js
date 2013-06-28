@@ -82,7 +82,7 @@ function VirtualList(config) {
 VirtualList.prototype.createRow = function(i) {
   var item;
   if (this.generatorFn)
-    item = this.generatorFn(i);
+    item = this.generatorFn(i, this.items[i]);
   else if (this.items) {
     if (typeof this.items[i] === 'string') {
       var itemText = document.createTextNode(this.items[i]);
