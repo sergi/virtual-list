@@ -28,7 +28,7 @@ rows:
 // This will create a scrolling list of 300x300 with 10000 rows. It is necessary to specify
 // how tall each row is by setting the `itemHeight` prpoerty in the config object. In this
 // example, we set up a generator function that will generate each row on demand.
-var list = new ScrollableList({
+var list = new VirtualList({
   w: 300,
   h: 300,
   itemHeight: 31,
@@ -56,7 +56,7 @@ for (var i = 0; i < 10000; i++) {
   bigAssList.push(el);
 }
 
-var list = new ScrollableList({
+var list = new VirtualList({
   w: 300,
   h: 300,
   items: bigAssList,
@@ -70,7 +70,7 @@ var bigAssList = [];
 for (var i = 0; i < 10000; i++)
   bigAssList.push("ITEM " + i);
 
-var list = new ScrollableList({
+var list = new VirtualList({
   w: 300,
   h: 300,
   items: bigAssList,
