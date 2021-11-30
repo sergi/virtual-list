@@ -13,7 +13,7 @@ export interface VirtualList<T extends string | HTMLElement = string> {
   totalRows: number;
   container: HTMLDivElement;
   cachedItemsLen: number;
-  _renderChunk: (this: VirtualList<T>, container: HTMLDivElement, count: number) => void;
+  _renderChunk: (this: VirtualList<T>, count: number) => void;
   rmNodeInterval: number;
   createRow: (this: VirtualList<T>, index: number) => HTMLElement;
 }

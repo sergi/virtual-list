@@ -4,6 +4,9 @@ import { defaultDimension } from "./utils/default-dimension.js";
 import { createDefaultItem } from "./utils/default-item.js";
 import { hasInlineStyle, hasScrollTop } from "./utils/discriminators.js";
 import { calculateChunkLength, calculateFinalItemIndex } from "./utils/final-item.js";
+import { firstItem } from "./utils/first-item.js";
+import { forEachInRange } from "./utils/for-each-in-range.js";
+import { hideAllButFirst } from "./utils/hide-all-except.js";
 import { numberPx } from "./utils/number-px.js";
 import { createScroller } from "./utils/scroller.js";
 /**
@@ -76,7 +79,7 @@ export function VirtualList<T extends string | HTMLElement = string>(this: Virtu
   var screenItemsLen = Math.ceil(config.h / itemHeight);
   // Cache 4 times the number of items that fit in the container viewport
   this.cachedItemsLen = screenItemsLen * 3;
-  this._renderChunk(this.container, 0);
+  this._renderChunk(0);
 
   var self = this;
   var lastRepaintY: number;
@@ -101,8 +104,7 @@ export function VirtualList<T extends string | HTMLElement = string>(this: Virtu
     }
     var scrollTop = target.scrollTop; // Triggers reflow
     if (!lastRepaintY || Math.abs(scrollTop - lastRepaintY) > maxBuffer) {
-      var first = scrollTop / itemHeight - screenItemsLen;
-      self._renderChunk(self.container, first < 0 ? 0 : first);
+      self._renderChunk(firstItem(scrollTop, itemHeight, screenItemsLen));
       lastRepaintY = scrollTop;
     }
 
@@ -141,38 +143,14 @@ VirtualList.prototype.createRow = function <T extends string | HTMLElement>(this
  * acceleration. We delete them once scrolling has finished.
  *
  */
-VirtualList.prototype._renderChunk = function <T extends string | HTMLElement = string>(this: VirtualList<T>, container: Element, from: number) {
-  const delta = calculateChunkLength(from, this.cachedItemsLen, this.totalRows);
-  const fragm = Array
-    .from(
-      {
-        length: delta,
-      },
-      (_, index) => this.createRow(index + from),
-    )
-    .reduce(
-      (accumulator, item) => {
-        accumulator.appendChild(item);
-        return accumulator;
-      },
-      document.createDocumentFragment(),
-    );
-  const finalItem = calculateFinalItemIndex(from + this.cachedItemsLen, this.totalRows);
-  // Append all the new rows in a document fragment that we will later append to
-  // the parent node
-  var fragment = document.createDocumentFragment();
-  for (var i = from; i < finalItem; i++) {
-    fragment.appendChild(this.createRow(i));
-  }
+VirtualList.prototype._renderChunk = function <T extends string | HTMLElement = string>(this: VirtualList<T>, from: number) {
+  hideAllButFirst(this.container.children);
 
-  // Hide and mark obsolete nodes for deletion.
-  for (var j = 1, l = container.children.length; j < l; j++) {
-    const element = container.children[j];
-    if (!hasInlineStyle(element)) {
-      return;
-    }
-    element.style.display = 'none';
-    element.setAttribute('data-rm', '1');
-  }
-  container.appendChild(fragment);
+  const fragment = document.createDocumentFragment();
+  forEachInRange(
+    from,
+    calculateChunkLength(from, this.cachedItemsLen, this.totalRows),
+    (index) => fragment.appendChild(this.createRow(index)),
+  );
+  this.container.appendChild(fragment);
 };
