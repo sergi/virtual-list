@@ -1,6 +1,6 @@
 {
   "name": "virtual-list",
-  "version": "1.0.1",
+  "version": "2.0.1",
   "description": "Allows the developer to create massively long lists that perform extremely fast by loading just the part of the list showing up on the viewport, and by optimizing the amount of DOM operations and reflows.",
   "devDependencies": {
     "@types/chai": "^4.2.22",
@@ -22,12 +22,12 @@
   ],
   "main": "./dist/index.js",
   "bugs": {
-    "url": "https://github.com/sergi/virtual-list/issues"
+    "url": "https://github.com/Mx-Wolf/virtual-list/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sergi/virtual-list.git"
+    "url": "https://github.com/Mx-Wolf/virtual-list.git"
   },
-  "author": "Sergi Mansilla <sergi.mansilla@gmail.com>",
+  "author": "Sergi Mansilla <sergi.mansilla@gmail.com>, Maxim Volkov <mx_ruz_net@hotmail.com>",
   "license": "MIT"
 }
