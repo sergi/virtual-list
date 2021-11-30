@@ -1,0 +1,1 @@
+export const calculateFinalItemIndex = (index:number, total:number) =>index<0?0:total<0?0:Math.min(index,total);

@@ -1,7 +1,9 @@
-import {VirtualList, VirtualListConfig} from "./types.js"
+import { VirtualList, VirtualListConfig } from "./types.js"
 import { createContainer } from "./utils/container.js";
+import { defaultDimension } from "./utils/default-dimension.js";
 import { createDefaultItem } from "./utils/default-item.js";
 import { hasInlineStyle, hasScrollTop } from "./utils/discriminators.js";
+import { calculateFinalItemIndex } from "./utils/final-item.js";
 import { numberPx } from "./utils/number-px.js";
 import { createScroller } from "./utils/scroller.js";
 /**
@@ -58,14 +60,14 @@ import { createScroller } from "./utils/scroller.js";
  * @param {object} config
  * @constructor
  */
-export function VirtualList<T extends string | HTMLElement = string>(this: VirtualList<T>, config:VirtualListConfig<T>) {
-  var width = (config && config.w + 'px') || '100%';
-  var height = (config && config.h + 'px') || '100%';
+export function VirtualList<T extends string | HTMLElement = string>(this: VirtualList<T>, config: VirtualListConfig<T>) {
+  var width = defaultDimension("w", config);
+  var height = defaultDimension("h", config);
   var itemHeight = this.itemHeight = config.itemHeight;
 
   this.items = config.items;
   this.generatorFn = config.generatorFn;
-  this.totalRows = config.totalRows || (config.items && config.items.length);
+  this.totalRows = config.totalRows || (config.items && config.items.length) || 0;
 
   var scroller = createScroller(numberPx(itemHeight * this.totalRows));
   this.container = createContainer(width, height);
@@ -77,13 +79,13 @@ export function VirtualList<T extends string | HTMLElement = string>(this: Virtu
   this._renderChunk(this.container, 0);
 
   var self = this;
-  var lastRepaintY:number;
+  var lastRepaintY: number;
   var maxBuffer = screenItemsLen * itemHeight;
   var lastScrolled = 0;
 
   // As soon as scrolling has stopped, this interval asynchronously removes all
   // the nodes that are not used anymore
-  this.rmNodeInterval = window.setInterval(function() {
+  this.rmNodeInterval = window.setInterval(function () {
     if (Date.now() - lastScrolled > 100) {
       var badNodes = document.querySelectorAll('[data-rm="1"]');
       for (var i = 0, l = badNodes.length; i < l; i++) {
@@ -92,9 +94,9 @@ export function VirtualList<T extends string | HTMLElement = string>(this: Virtu
     }
   }, 300);
 
-  function onScroll(e:Event) {
-    const {target} = e;
-    if(!hasScrollTop(target)){
+  function onScroll(e: Event) {
+    const { target } = e;
+    if (!hasScrollTop(target)) {
       return;
     }
     var scrollTop = target.scrollTop; // Triggers reflow
@@ -111,12 +113,12 @@ export function VirtualList<T extends string | HTMLElement = string>(this: Virtu
   this.container.addEventListener('scroll', onScroll);
 }
 
-VirtualList.prototype.createRow = function<T extends string | HTMLElement>(this:VirtualList<T>,i:number) {
-  var item:HTMLElement;
+VirtualList.prototype.createRow = function <T extends string | HTMLElement>(this: VirtualList<T>, i: number) {
+  var item: HTMLElement;
   if (this.generatorFn)
     item = this.generatorFn(i);
   else if (this.items) {
-    const text =  this.items[i];
+    const text = this.items[i];
     if (typeof text === 'string') {
       item = createDefaultItem(text, this.itemHeight);
     } else {
@@ -139,11 +141,9 @@ VirtualList.prototype.createRow = function<T extends string | HTMLElement>(this:
  * acceleration. We delete them once scrolling has finished.
  *
  */
-VirtualList.prototype._renderChunk = function<T extends string | HTMLElement = string>(this: VirtualList<T>, container:Element, from:number) {
-  var finalItem = from + this.cachedItemsLen;
-  if (finalItem > this.totalRows)
-    finalItem = this.totalRows;
-
+VirtualList.prototype._renderChunk = function <T extends string | HTMLElement = string>(this: VirtualList<T>, container: Element, from: number) {
+  var finalItem = calculateFinalItemIndex(from + this.cachedItemsLen, this.totalRows);
+debugger;
   // Append all the new rows in a document fragment that we will later append to
   // the parent node
   var fragment = document.createDocumentFragment();
@@ -154,11 +154,11 @@ VirtualList.prototype._renderChunk = function<T extends string | HTMLElement = s
   // Hide and mark obsolete nodes for deletion.
   for (var j = 1, l = container.children.length; j < l; j++) {
     const element = container.children[j];
-    if(!hasInlineStyle(element)){
+    if (!hasInlineStyle(element)) {
       return;
     }
     element.style.display = 'none';
-    element.setAttribute('data-rm', '1');      
+    element.setAttribute('data-rm', '1');
   }
   container.appendChild(fragment);
 };
