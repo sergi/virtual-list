@@ -1,6 +1,6 @@
 export interface VirtualListConfig {
-  w?: number | undefined;
-  h: number;
+  width?: number | undefined;
+  height: number;
   itemHeight: number;
   generatorFn: ((index: number) => HTMLElement);
   totalRows: number | undefined;

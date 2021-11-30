@@ -7,7 +7,8 @@ import { calculateChunkLength, calculateFinalItemIndex } from "./utils/final-ite
 import { firstItem } from "./utils/first-item.js";
 import { forEachInRange } from "./utils/for-each-in-range.js";
 import { hideAllButFirst, removeHiddenDebounced, removeHiddenItems } from "./utils/hide-all-except.js";
-import { DATA_RM_SELECTOR } from "./utils/known.js";
+import { itemsPerScript } from "./utils/items-per-screen.js";
+import { CACHE_RESERVE, DATA_RM_SELECTOR } from "./utils/known.js";
 import { numberPx } from "./utils/number-px.js";
 import { scrollHandlerFactory } from "./utils/scroll-handler-factory.js";
 import { createScroller } from "./utils/scroller.js";
@@ -66,34 +67,32 @@ import { createScroller } from "./utils/scroller.js";
  * @constructor
  */
 export function VirtualList(this: VirtualList, config: VirtualListConfig) {
-  var width = defaultDimension("w", config);
-  var height = defaultDimension("h", config);
-  var itemHeight = this.itemHeight = config.itemHeight;
+
+  this.itemHeight = config.itemHeight;
 
   this.generatorFn = config.generatorFn;
   this.totalRows = config.totalRows || 0;
 
-  var scroller = createScroller(numberPx(itemHeight * this.totalRows));
-  this.container = createContainer(width, height);
-  this.container.appendChild(scroller);
+  this.container = createContainer(
+    defaultDimension("width", config),
+    defaultDimension("height", config),
+  );
+  this.container.appendChild(
+    createScroller(numberPx(this.itemHeight * this.totalRows)),
+  );
 
-  var screenItemsLen = Math.ceil(config.h / itemHeight);
-  // Cache 4 times the number of items that fit in the container viewport
-  this.cachedItemsLen = screenItemsLen * 3;
+  var screenItemsLen = itemsPerScript(config);
+
+  this.cachedItemsLen = screenItemsLen * CACHE_RESERVE;
   this._renderChunk(0);
 
-  var self = this;
-  var maxBuffer = screenItemsLen * itemHeight;
-
-  // As soon as scrolling has stopped, this interval asynchronously removes all
-  // the nodes that are not used anymore
   const scrollHandler = scrollHandlerFactory(
     this.container,
-    maxBuffer,
+    config.height,
     (scrollTop) => {
-      self._renderChunk(firstItem(scrollTop, itemHeight, screenItemsLen));
+      this._renderChunk(firstItem(scrollTop, this.itemHeight, screenItemsLen));
       removeHiddenDebounced();
-     }
+    }
   );
 
 

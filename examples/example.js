@@ -1,11 +1,14 @@
 import {VirtualList} from "../dist/index.js";
 var list = new VirtualList({
   h: window.innerHeight,
+  height: window.innerHeight,
   itemHeight: 30,
   totalRows: 100000,
   generatorFn: function(row) {
-    var el = document.createElement("div");
-    el.innerHTML = "<p>ITEM " + row + "</p>";
+    const el = document.createElement("div");
+    const p = document.createElement("p");
+    p.innerText = `row item: ${row}`;
+    el.appendChild(p);
     el.classList.add('vrow');
     return el;
   }

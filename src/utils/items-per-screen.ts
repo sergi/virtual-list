@@ -1,3 +1,3 @@
 import { VirtualListConfig } from "../types";
 
-export const itemsPerScript = (config:Pick<VirtualListConfig,"h"|"itemHeight">)=>Math.ceil(config.h/config.itemHeight);
+export const itemsPerScript = (config:Pick<VirtualListConfig,"height"|"itemHeight">)=>Math.ceil(config.height/config.itemHeight);
