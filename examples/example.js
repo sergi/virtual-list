@@ -2,11 +2,9 @@ import {virtualList} from "../dist/index.js";
 const container = document.querySelector(".container");
 const unmount = virtualList({
   container,
-  h: window.innerHeight,
-  height: window.innerHeight,
   itemHeight: 30,
   totalRows: 100000,
-  generatorFn: function(row) {
+  createRow: function(row) {
     const el = document.createElement("div");
     const p = document.createElement("p");
     p.innerText = `row item: ${row}`;

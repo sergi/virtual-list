@@ -69,9 +69,9 @@ export function virtualList(config: VirtualListConfig) {
     container,
     screenItemsLen * CACHE_RESERVE,
     config.totalRows,
-    createRowFactory(config.generatorFn, config.itemHeight)
+    createRowFactory(config.createRow, config.itemHeight)
   )
-  
+
   renderChunk(0);
 
   const scrollHandler = scrollHandlerFactory(
