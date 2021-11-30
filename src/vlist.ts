@@ -9,6 +9,7 @@ import { forEachInRange } from "./utils/for-each-in-range.js";
 import { hideAllButFirst, removeHiddenDebounced, removeHiddenItems } from "./utils/hide-all-except.js";
 import { DATA_RM_SELECTOR } from "./utils/known.js";
 import { numberPx } from "./utils/number-px.js";
+import { scrollHandlerFactory } from "./utils/scroll-handler-factory.js";
 import { createScroller } from "./utils/scroller.js";
 /**
  * The MIT License (MIT)
@@ -82,28 +83,26 @@ export function VirtualList(this: VirtualList, config: VirtualListConfig) {
   this._renderChunk(0);
 
   var self = this;
-  var lastRepaintY: number;
   var maxBuffer = screenItemsLen * itemHeight;
 
   // As soon as scrolling has stopped, this interval asynchronously removes all
   // the nodes that are not used anymore
-
-  function onScroll() {
-
-    var scrollTop = self.container.scrollTop; // Triggers reflow
-    if (!lastRepaintY || Math.abs(scrollTop - lastRepaintY) > maxBuffer) {
+  const scrollHandler = scrollHandlerFactory(
+    this.container,
+    maxBuffer,
+    (scrollTop) => {
       self._renderChunk(firstItem(scrollTop, itemHeight, screenItemsLen));
       removeHiddenDebounced();
-      lastRepaintY = scrollTop;
-    }
-  }
+     }
+  );
 
-  this.container.addEventListener('scroll', onScroll);
+
+  this.container.addEventListener('scroll', scrollHandler);
 }
 
 VirtualList.prototype.createRow = function (this: VirtualList, i: number) {
   var item = this.generatorFn(i);
- 
+
   item.style.position = 'absolute';
   item.style.top = numberPx(i * this.itemHeight);
   return item;
