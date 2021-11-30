@@ -1,7 +1,6 @@
 import { VirtualListConfig } from "./types.js"
 import { renderChunkFactory } from "./utils/chunk-factory.js";
-import { createContainer } from "./utils/container.js";
-import { defaultDimension } from "./utils/default-dimension.js";
+import { createContainer, initContainer } from "./utils/container.js";
 import { firstItem } from "./utils/first-item.js";
 import { removeHiddenDebounced } from "./utils/hide-all-except.js";
 import { itemsPerScript } from "./utils/items-per-screen.js";
@@ -61,11 +60,8 @@ import { createScroller } from "./utils/scroller.js";
 
 
 export function virtualList(config: VirtualListConfig) {
-  const { container } = config;
-  createContainer(container);
-  container.appendChild(
-    createScroller(numberPx(config.itemHeight * config.totalRows)),
-  );
+  
+  const container = initContainer(config)
 
   var screenItemsLen = itemsPerScript(config);
 
@@ -75,6 +71,7 @@ export function virtualList(config: VirtualListConfig) {
     config.totalRows,
     createRowFactory(config.generatorFn, config.itemHeight)
   )
+  
   renderChunk(0);
 
   const scrollHandler = scrollHandlerFactory(
@@ -86,4 +83,5 @@ export function virtualList(config: VirtualListConfig) {
   );
 
   container.addEventListener('scroll', scrollHandler);
+  return ()=>{container.removeEventListener('scroll', scrollHandler)};
 }
