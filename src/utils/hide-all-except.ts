@@ -17,7 +17,7 @@ export const hideAllButFirst = (children: HTMLCollection) => forEachInRange(
   (index) => hideItem(children[index]),
 );
 
-export const removeHiddenItems = ()=>{
+const removeHiddenItems = ()=>{
   var badNodes = [...document.querySelectorAll(DATA_RM_SELECTOR)];
     badNodes.forEach((item)=>item.remove())
 }

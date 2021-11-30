@@ -7,7 +7,7 @@ const styleContainer = (style:ElementCSSInlineStyle["style"])=>{
   style.position = 'relative'; 
   style.padding = '0';
 }
-export const createContainer =(container:HTMLElement)=>{
+const createContainer =(container:HTMLElement)=>{
  styleContainer(container.style);
  container.innerHTML='';
 }

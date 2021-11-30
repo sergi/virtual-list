@@ -1,14 +1,12 @@
 import { VirtualListConfig } from "./types.js"
 import { renderChunkFactory } from "./utils/chunk-factory.js";
-import { createContainer, initContainer } from "./utils/container.js";
+import { initContainer } from "./utils/container.js";
 import { firstItem } from "./utils/first-item.js";
 import { removeHiddenDebounced } from "./utils/hide-all-except.js";
 import { itemsPerScript } from "./utils/items-per-screen.js";
 import { CACHE_RESERVE } from "./utils/known.js";
-import { numberPx } from "./utils/number-px.js";
 import { createRowFactory } from "./utils/row-factory.js";
 import { scrollHandlerFactory } from "./utils/scroll-handler-factory.js";
-import { createScroller } from "./utils/scroller.js";
 /**
  * The MIT License (MIT)
  *
