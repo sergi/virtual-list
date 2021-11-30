@@ -6,7 +6,7 @@ import { hasInlineStyle, hasScrollTop } from "./utils/discriminators.js";
 import { calculateChunkLength, calculateFinalItemIndex } from "./utils/final-item.js";
 import { firstItem } from "./utils/first-item.js";
 import { forEachInRange } from "./utils/for-each-in-range.js";
-import { hideAllButFirst, removeHiddenItems } from "./utils/hide-all-except.js";
+import { hideAllButFirst, removeHiddenDebounced, removeHiddenItems } from "./utils/hide-all-except.js";
 import { DATA_RM_SELECTOR } from "./utils/known.js";
 import { numberPx } from "./utils/number-px.js";
 import { createScroller } from "./utils/scroller.js";
@@ -84,25 +84,18 @@ export function VirtualList(this: VirtualList, config: VirtualListConfig) {
   var self = this;
   var lastRepaintY: number;
   var maxBuffer = screenItemsLen * itemHeight;
-  var lastScrolled = 0;
 
   // As soon as scrolling has stopped, this interval asynchronously removes all
   // the nodes that are not used anymore
-  this.rmNodeInterval = window.setInterval(function () {
-    if (Date.now() - lastScrolled > 100) {
-      removeHiddenItems()
-    }
-  }, 300);
 
   function onScroll() {
 
     var scrollTop = self.container.scrollTop; // Triggers reflow
     if (!lastRepaintY || Math.abs(scrollTop - lastRepaintY) > maxBuffer) {
       self._renderChunk(firstItem(scrollTop, itemHeight, screenItemsLen));
+      removeHiddenDebounced();
       lastRepaintY = scrollTop;
     }
-
-    lastScrolled = Date.now();
   }
 
   this.container.addEventListener('scroll', onScroll);
