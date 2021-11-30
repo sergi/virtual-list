@@ -2,8 +2,14 @@
   "name": "virtual-list",
   "version": "1.0.1",
   "description": "Allows the developer to create massively long lists that perform extremely fast by loading just the part of the list showing up on the viewport, and by optimizing the amount of DOM operations and reflows.",
-  "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  },
   "keywords": [
     "list",
     "buffer",
