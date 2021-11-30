@@ -108,7 +108,6 @@ export function VirtualList(this: VirtualList, config: VirtualListConfig) {
     }
 
     lastScrolled = Date.now();
-    e.preventDefault && e.preventDefault();
   }
 
   this.container.addEventListener('scroll', onScroll);
