@@ -20,7 +20,7 @@
     "performance",
     "dom"
   ],
-  "main": "./vlist.js.js",
+  "main": "./dist/index.js",
   "bugs": {
     "url": "https://github.com/sergi/virtual-list/issues"
   },
