@@ -3,7 +3,7 @@ import { createContainer } from "./utils/container.js";
 import { defaultDimension } from "./utils/default-dimension.js";
 import { createDefaultItem } from "./utils/default-item.js";
 import { hasInlineStyle, hasScrollTop } from "./utils/discriminators.js";
-import { calculateFinalItemIndex } from "./utils/final-item.js";
+import { calculateChunkLength, calculateFinalItemIndex } from "./utils/final-item.js";
 import { numberPx } from "./utils/number-px.js";
 import { createScroller } from "./utils/scroller.js";
 /**
@@ -142,8 +142,22 @@ VirtualList.prototype.createRow = function <T extends string | HTMLElement>(this
  *
  */
 VirtualList.prototype._renderChunk = function <T extends string | HTMLElement = string>(this: VirtualList<T>, container: Element, from: number) {
-  var finalItem = calculateFinalItemIndex(from + this.cachedItemsLen, this.totalRows);
-debugger;
+  const delta = calculateChunkLength(from, this.cachedItemsLen, this.totalRows);
+  const fragm = Array
+    .from(
+      {
+        length: delta,
+      },
+      (_, index) => this.createRow(index + from),
+    )
+    .reduce(
+      (accumulator, item) => {
+        accumulator.appendChild(item);
+        return accumulator;
+      },
+      document.createDocumentFragment(),
+    );
+  const finalItem = calculateFinalItemIndex(from + this.cachedItemsLen, this.totalRows);
   // Append all the new rows in a document fragment that we will later append to
   // the parent node
   var fragment = document.createDocumentFragment();
