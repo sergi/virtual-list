@@ -117,7 +117,6 @@ export function VirtualList(this: VirtualList, config: VirtualListConfig) {
 VirtualList.prototype.createRow = function (this: VirtualList, i: number) {
   var item: HTMLElement= this.generatorFn(i);
  
-  item.classList.add('vrow');
   item.style.position = 'absolute';
   item.style.top = numberPx(i * this.itemHeight);
   return item;

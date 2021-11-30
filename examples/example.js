@@ -6,6 +6,7 @@ var list = new VirtualList({
   generatorFn: function(row) {
     var el = document.createElement("div");
     el.innerHTML = "<p>ITEM " + row + "</p>";
+    el.classList.add('vrow');
     return el;
   }
 });
