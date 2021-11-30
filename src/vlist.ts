@@ -63,14 +63,13 @@ import { createScroller } from "./utils/scroller.js";
  * @param {object} config
  * @constructor
  */
-export function VirtualList<T extends string | HTMLElement = string>(this: VirtualList<T>, config: VirtualListConfig<T>) {
+export function VirtualList(this: VirtualList, config: VirtualListConfig) {
   var width = defaultDimension("w", config);
   var height = defaultDimension("h", config);
   var itemHeight = this.itemHeight = config.itemHeight;
 
-  this.items = config.items;
   this.generatorFn = config.generatorFn;
-  this.totalRows = config.totalRows || (config.items && config.items.length) || 0;
+  this.totalRows = config.totalRows || 0;
 
   var scroller = createScroller(numberPx(itemHeight * this.totalRows));
   this.container = createContainer(width, height);
@@ -115,21 +114,9 @@ export function VirtualList<T extends string | HTMLElement = string>(this: Virtu
   this.container.addEventListener('scroll', onScroll);
 }
 
-VirtualList.prototype.createRow = function <T extends string | HTMLElement>(this: VirtualList<T>, i: number) {
-  var item: HTMLElement;
-  if (this.generatorFn)
-    item = this.generatorFn(i);
-  else if (this.items) {
-    const text = this.items[i];
-    if (typeof text === 'string') {
-      item = createDefaultItem(text, this.itemHeight);
-    } else {
-      item = text;
-    }
-  } else {
-    return;
-  }
-
+VirtualList.prototype.createRow = function (this: VirtualList, i: number) {
+  var item: HTMLElement= this.generatorFn(i);
+ 
   item.classList.add('vrow');
   item.style.position = 'absolute';
   item.style.top = numberPx(i * this.itemHeight);
@@ -143,7 +130,7 @@ VirtualList.prototype.createRow = function <T extends string | HTMLElement>(this
  * acceleration. We delete them once scrolling has finished.
  *
  */
-VirtualList.prototype._renderChunk = function <T extends string | HTMLElement = string>(this: VirtualList<T>, from: number) {
+VirtualList.prototype._renderChunk = function (this: VirtualList, from: number) {
   hideAllButFirst(this.container.children);
 
   const fragment = document.createDocumentFragment();
