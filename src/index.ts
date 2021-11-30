@@ -1,1 +1,1 @@
-export {VirtualList} from "./vlist.js"
+export {virtualList} from "./vlist.js"

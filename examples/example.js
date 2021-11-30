@@ -1,5 +1,7 @@
-import {VirtualList} from "../dist/index.js";
-var list = new VirtualList({
+import {virtualList} from "../dist/index.js";
+const container = document.querySelector(".container");
+const unmount = virtualList({
+  container,
   h: window.innerHeight,
   height: window.innerHeight,
   itemHeight: 30,
@@ -14,5 +16,3 @@ var list = new VirtualList({
   }
 });
 
-list.container.classList.add("container");
-document.body.appendChild(list.container)

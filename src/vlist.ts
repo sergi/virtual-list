@@ -1,15 +1,13 @@
-import { VirtualList, VirtualListConfig } from "./types.js"
+import { VirtualListConfig } from "./types.js"
+import { renderChunkFactory } from "./utils/chunk-factory.js";
 import { createContainer } from "./utils/container.js";
 import { defaultDimension } from "./utils/default-dimension.js";
-import { createDefaultItem } from "./utils/default-item.js";
-import { hasInlineStyle, hasScrollTop } from "./utils/discriminators.js";
-import { calculateChunkLength, calculateFinalItemIndex } from "./utils/final-item.js";
 import { firstItem } from "./utils/first-item.js";
-import { forEachInRange } from "./utils/for-each-in-range.js";
-import { hideAllButFirst, removeHiddenDebounced, removeHiddenItems } from "./utils/hide-all-except.js";
+import { removeHiddenDebounced } from "./utils/hide-all-except.js";
 import { itemsPerScript } from "./utils/items-per-screen.js";
-import { CACHE_RESERVE, DATA_RM_SELECTOR } from "./utils/known.js";
+import { CACHE_RESERVE } from "./utils/known.js";
 import { numberPx } from "./utils/number-px.js";
+import { createRowFactory } from "./utils/row-factory.js";
 import { scrollHandlerFactory } from "./utils/scroll-handler-factory.js";
 import { createScroller } from "./utils/scroller.js";
 /**
@@ -61,67 +59,31 @@ import { createScroller } from "./utils/scroller.js";
 
 'use strict';
 
-/**
- * Creates a virtually-rendered scrollable list.
- * @param {object} config
- * @constructor
- */
-export function VirtualList(this: VirtualList, config: VirtualListConfig) {
 
-  this.itemHeight = config.itemHeight;
-
-  this.generatorFn = config.generatorFn;
-  this.totalRows = config.totalRows || 0;
-
-  this.container = createContainer(
-    defaultDimension("width", config),
-    defaultDimension("height", config),
-  );
-  this.container.appendChild(
-    createScroller(numberPx(this.itemHeight * this.totalRows)),
+export function virtualList(config: VirtualListConfig) {
+  const { container } = config;
+  createContainer(container);
+  container.appendChild(
+    createScroller(numberPx(config.itemHeight * config.totalRows)),
   );
 
   var screenItemsLen = itemsPerScript(config);
 
-  this.cachedItemsLen = screenItemsLen * CACHE_RESERVE;
-  this._renderChunk(0);
+  const renderChunk = renderChunkFactory(
+    container,
+    screenItemsLen * CACHE_RESERVE,
+    config.totalRows,
+    createRowFactory(config.generatorFn, config.itemHeight)
+  )
+  renderChunk(0);
 
   const scrollHandler = scrollHandlerFactory(
-    this.container,
-    config.height,
+    container,
     (scrollTop) => {
-      this._renderChunk(firstItem(scrollTop, this.itemHeight, screenItemsLen));
+      renderChunk(firstItem(scrollTop, config.itemHeight, screenItemsLen));
       removeHiddenDebounced();
     }
   );
 
-
-  this.container.addEventListener('scroll', scrollHandler);
+  container.addEventListener('scroll', scrollHandler);
 }
-
-VirtualList.prototype.createRow = function (this: VirtualList, i: number) {
-  var item = this.generatorFn(i);
-
-  item.style.position = 'absolute';
-  item.style.top = numberPx(i * this.itemHeight);
-  return item;
-};
-
-/**
- * Renders a particular, consecutive chunk of the total rows in the list. To
- * keep acceleration while scrolling, we mark the nodes that are candidate for
- * deletion instead of deleting them right away, which would suddenly stop the
- * acceleration. We delete them once scrolling has finished.
- *
- */
-VirtualList.prototype._renderChunk = function (this: VirtualList, from: number) {
-  hideAllButFirst(this.container.children);
-
-  const fragment = document.createDocumentFragment();
-  forEachInRange(
-    from,
-    calculateChunkLength(from, this.cachedItemsLen, this.totalRows),
-    (index) => fragment.appendChild(this.createRow(index)),
-  );
-  this.container.appendChild(fragment);
-};
