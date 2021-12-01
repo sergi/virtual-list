@@ -3,7 +3,7 @@ import { renderChunkFactory } from './utils/chunk-factory.js';
 import { initContainer } from './utils/container.js';
 import { firstItem } from './utils/first-item.js';
 import { removeHiddenDebounced } from './utils/hide-all-except.js';
-import { itemsPerScript } from './utils/items-per-screen.js';
+import { itemsPerScreen } from './utils/items-per-screen.js';
 import { CACHE_RESERVE } from './utils/known.js';
 import { createRowFactory } from './utils/row-factory.js';
 import { scrollHandlerFactory } from './utils/scroll-handler-factory.js';
@@ -58,7 +58,7 @@ export function virtualList(config: VirtualListConfig) {
 
   const container = initContainer(config);
 
-  const screenItemsLen = itemsPerScript(config);
+  const screenItemsLen = itemsPerScreen(config);
 
   const renderChunk = renderChunkFactory(
     container,
