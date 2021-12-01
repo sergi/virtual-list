@@ -5,7 +5,7 @@ import { firstItem } from './utils/first-item.js';
 import { removeHiddenDebounced } from './utils/hide-all-except.js';
 import { itemsPerScreen } from './utils/items-per-screen.js';
 import { CACHE_RESERVE } from './utils/known.js';
-import { createRowFactory } from './utils/row-factory.js';
+import { wrapCreateRow } from './utils/row-factory.js';
 import { scrollHandlerFactory } from './utils/scroll-handler-factory.js';
 /**
  * The MIT License (MIT)
@@ -61,10 +61,8 @@ export function virtualList(config: VirtualListConfig) {
   const screenItemsLen = itemsPerScreen(config);
 
   const renderChunk = renderChunkFactory(
-    container,
-    screenItemsLen * CACHE_RESERVE,
-    config.totalRows,
-    createRowFactory(config.createRow, config.itemHeight)
+    config,
+    screenItemsLen,
   );
 
   renderChunk(0);
