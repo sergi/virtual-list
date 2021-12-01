@@ -1,9 +1,6 @@
+import { Rectangle } from '../types.js';
 import { numberPx } from './number-px.js';
 
-interface Rectangle {
-  height: number;
-  width: number;
-}
 
 const initializeInlineStyles = ({style}:ElementCSSInlineStyle, {height,width}:Rectangle)=>{
   style.opacity = '0';
