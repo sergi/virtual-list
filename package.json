@@ -2,6 +2,11 @@
   "name": "virtual-list",
   "version": "2.0.1",
   "description": "Allows the developer to create massively long lists that perform extremely fast by loading just the part of the list showing up on the viewport, and by optimizing the amount of DOM operations and reflows.",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --fix --ext .ts ./src",
+    "test": "mocha"
+  },
   "devDependencies": {
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
@@ -53,5 +58,18 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "rules": {}
+  },
+  "files": [
+    "/dist/**/*"
+  ],
+  "mocha": {
+    "loader": "ts-node/esm",
+    "extensions": ["ts", "tsx"],
+    "spec": [
+      "src/**/*.test.*"
+    ],
+    "watch-files": [
+      "src"
+    ]
   }
 }

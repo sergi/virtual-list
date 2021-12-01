@@ -4,8 +4,6 @@ import { initContainer } from './utils/container.js';
 import { firstItem } from './utils/first-item.js';
 import { removeHiddenDebounced } from './utils/hide-all-except.js';
 import { itemsPerScreen } from './utils/items-per-screen.js';
-import { CACHE_RESERVE } from './utils/known.js';
-import { wrapCreateRow } from './utils/row-factory.js';
 import { scrollHandlerFactory } from './utils/scroll-handler-factory.js';
 /**
  * The MIT License (MIT)

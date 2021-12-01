@@ -1,4 +1,4 @@
-const makeZeroIfNegative = (v: number) => v < 0 ? 0 : v;
+export const makeZeroIfNegative = (v: number) => v < 0 ? 0 : v;
 const deltaOrCacheSize = (delta: number, cacheSize: number) =>  delta>cacheSize?cacheSize:makeZeroIfNegative(delta);
 
 export const calculateChunkLength = (from: number, cacheSize: number, total: number) => {
