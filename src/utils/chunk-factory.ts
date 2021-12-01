@@ -1,6 +1,6 @@
-import { calculateChunkLength } from "./final-item.js";
-import { forEachInRange } from "./for-each-in-range.js";
-import { hideAllButFirst } from "./hide-all-except.js";
+import { calculateChunkLength } from './final-item.js';
+import { forEachInRange } from './for-each-in-range.js';
+import { hideAllButFirst } from './hide-all-except.js';
 
 export const renderChunkFactory = (
   container: HTMLElement,

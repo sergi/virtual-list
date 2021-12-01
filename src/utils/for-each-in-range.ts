@@ -3,4 +3,4 @@ export const forEachInRange = (first:number, count: number, action:(index:number
   for(let index = first; index<beforeLast;++index){
     action(index);
   }
-}
+};

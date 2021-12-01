@@ -9,4 +9,4 @@ export const calculateChunkLength = (from: number, cacheSize: number, total: num
     makeZeroIfNegative(total) - makeZeroIfNegative(from),
     cacheSize,
   );
-}
+};

@@ -1,12 +1,12 @@
-import { VirtualListConfig } from "./types.js"
-import { renderChunkFactory } from "./utils/chunk-factory.js";
-import { initContainer } from "./utils/container.js";
-import { firstItem } from "./utils/first-item.js";
-import { removeHiddenDebounced } from "./utils/hide-all-except.js";
-import { itemsPerScript } from "./utils/items-per-screen.js";
-import { CACHE_RESERVE } from "./utils/known.js";
-import { createRowFactory } from "./utils/row-factory.js";
-import { scrollHandlerFactory } from "./utils/scroll-handler-factory.js";
+import { VirtualListConfig } from './types.js';
+import { renderChunkFactory } from './utils/chunk-factory.js';
+import { initContainer } from './utils/container.js';
+import { firstItem } from './utils/first-item.js';
+import { removeHiddenDebounced } from './utils/hide-all-except.js';
+import { itemsPerScript } from './utils/items-per-screen.js';
+import { CACHE_RESERVE } from './utils/known.js';
+import { createRowFactory } from './utils/row-factory.js';
+import { scrollHandlerFactory } from './utils/scroll-handler-factory.js';
 /**
  * The MIT License (MIT)
  *
@@ -54,21 +54,18 @@ import { scrollHandlerFactory } from "./utils/scroll-handler-factory.js";
  * SOFTWARE.
  */
 
-'use strict';
-
-
 export function virtualList(config: VirtualListConfig) {
-  
-  const container = initContainer(config)
 
-  var screenItemsLen = itemsPerScript(config);
+  const container = initContainer(config);
+
+  const screenItemsLen = itemsPerScript(config);
 
   const renderChunk = renderChunkFactory(
     container,
     screenItemsLen * CACHE_RESERVE,
     config.totalRows,
     createRowFactory(config.createRow, config.itemHeight)
-  )
+  );
 
   renderChunk(0);
 
@@ -81,5 +78,5 @@ export function virtualList(config: VirtualListConfig) {
   );
 
   container.addEventListener('scroll', scrollHandler);
-  return ()=>{container.removeEventListener('scroll', scrollHandler)};
+  return ()=>{container.removeEventListener('scroll', scrollHandler);};
 }
