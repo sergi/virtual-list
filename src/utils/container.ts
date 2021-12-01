@@ -1,14 +1,14 @@
 import { VirtualListConfig } from '../types.js';
-import { numberPx } from './number-px.js';
+import { SCROLLER_OTHER_SIZE } from './known.js';
 import { createScroller } from './scroller.js';
 
-const styleContainer = (style:ElementCSSInlineStyle['style'])=>{
+const styleContainer = ({style}:ElementCSSInlineStyle)=>{
   style.overflow = 'auto';
   style.position = 'relative';
   style.padding = '0';
 };
 const createContainer =(container:HTMLElement)=>{
-  styleContainer(container.style);
+  styleContainer(container);
   container.innerHTML='';
 };
 
@@ -16,7 +16,7 @@ export const initContainer = (config: Pick<VirtualListConfig,'container'| 'itemH
   const { container } = config;
   createContainer(container);
   container.appendChild(
-    createScroller(numberPx(config.itemHeight * config.totalRows)),
+    createScroller({height: config.itemHeight * config.totalRows, width:SCROLLER_OTHER_SIZE}),
   );
   return container;
 };
