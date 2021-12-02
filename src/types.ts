@@ -30,9 +30,9 @@ export interface GridItemContext {
 }
 
 export interface Classes {
-  head: string | ((context:Pick<GridItemContext,'column'>) => string);
-  row: string | ((context:Pick<GridItemContext,'row'>) => string);
-  cell: string | ((context:GridItemContext) => string);
+  head: string | ((context: Pick<GridItemContext, 'column'>) => string);
+  row: string | ((context: Pick<GridItemContext, 'row'>) => string);
+  cell: string | ((context: GridItemContext) => string);
 }
 
 export interface Config {
@@ -41,10 +41,10 @@ export interface Config {
   rows: InPiece;
   columns: InPiece;
   classes: Classes;
-  caption:(td:HTMLTableCellElement, context:Pick<GridItemContext,'column'>)=>HTMLTableCellElement;
-  label:(td:HTMLTableCellElement, context:Pick<GridItemContext,'row'>)=>HTMLTableCellElement;
-  content:(td:HTMLTableCellElement, context:GridItemContext)=>HTMLTableCellElement;
-  widths:Map<Ordinal,OnScreen>;
-  heights: Map<Ordinal,OnScreen>;
+  caption: (td: HTMLTableCellElement, context: Pick<GridItemContext, 'column'>) => HTMLTableCellElement;
+  label: (td: HTMLTableCellElement, context: Pick<GridItemContext, 'row'>) => HTMLTableCellElement;
+  content: (td: HTMLTableCellElement, context: GridItemContext) => HTMLTableCellElement;
+  widths: Map<Ordinal, OnScreen>;
+  heights: Map<Ordinal, OnScreen>;
 }
 
