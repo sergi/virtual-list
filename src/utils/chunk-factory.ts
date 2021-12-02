@@ -4,6 +4,7 @@ import { hideAllButFirst } from './hide-all-except.js';
 import {VirtualListConfig} from '../types.js';
 import { wrapCreateRow } from './row-factory.js';
 import { CACHE_RESERVE } from './known.js';
+import { createDocumentFragment } from './control-factory.js';
 
 export const renderChunkFactory = (
   config:Pick<VirtualListConfig,'container'|'totalRows'|'itemHeight'|'createRow'>,
@@ -15,7 +16,7 @@ export const renderChunkFactory = (
   return (from: number) =>{
     hideAllButFirst(container.children);
 
-    const fragment = document.createDocumentFragment();
+    const fragment = createDocumentFragment();
     forEachInRange(
       from,
       calculateChunkLength(from, cachedItemsLen, totalRows),

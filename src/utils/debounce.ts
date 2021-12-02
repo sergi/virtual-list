@@ -1,10 +1,10 @@
-export const debounce = (action: (...args: unknown[]) => void, coolDownDuration: number) => {
+export const debounce = <O, P extends unknown[]>(action: (this:O, ...args: P) => void, coolDownDuration: number):typeof action => {
   let timerId = 0;
-  return function (this:unknown, ...args1: unknown[]) {
+  return function (this:O, ...args1:P) {
     window.clearTimeout(timerId);
     timerId = window.setTimeout(
-      (...args2: unknown[]) => {
-        action.call(this, args2);
+      (...args2: P) => {
+        action.call(this, ...args2);
       },
       coolDownDuration,
       ...args1

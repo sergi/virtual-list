@@ -2,6 +2,7 @@ import { DATA_RM_ATTRIBUTE, DATA_RM_SELECTOR, DATA_RM_VALUE, FIRST_IS_THE_SCROLL
 import { hasInlineStyle } from './discriminators.js';
 import { forEachInRange } from './for-each-in-range.js';
 import { debounce } from './debounce.js';
+import { querySelectorAll } from './control-factory.js';
 
 const hideItem = (element: Element) => {
   if (!hasInlineStyle(element)) {
@@ -18,7 +19,7 @@ export const hideAllButFirst = (children: HTMLCollection) => forEachInRange(
 );
 
 const removeHiddenItems = ()=>{
-  const badNodes = [...document.querySelectorAll(DATA_RM_SELECTOR)];
+  const badNodes = [...querySelectorAll(DATA_RM_SELECTOR)];
   badNodes.forEach((item)=>item.remove());
 };
 

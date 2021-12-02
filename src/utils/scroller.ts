@@ -1,4 +1,5 @@
 import { Rectangle } from '../types.js';
+import { createElement } from './control-factory.js';
 import { numberPx } from './number-px.js';
 
 
@@ -12,7 +13,7 @@ const initializeInlineStyles = ({style}:ElementCSSInlineStyle, {height,width}:Re
   return style;
 };
 export const createScroller = (rectangle:Rectangle) => {
-  const scroller = document.createElement('div');
+  const scroller = createElement('div');
   initializeInlineStyles(scroller,rectangle);
   return scroller;
 };
