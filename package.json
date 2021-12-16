@@ -1,9 +1,26 @@
 {
   "name": "virtual-list",
-  "version": "1.0.1",
+  "version": "2.0.1",
   "description": "Allows the developer to create massively long lists that perform extremely fast by loading just the part of the list showing up on the viewport, and by optimizing the amount of DOM operations and reflows.",
-  "dependencies": {},
-  "devDependencies": {},
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --fix --ext .ts ./src",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/chai-spies": "^1.0.3",
+    "@types/mocha": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "chai": "^4.3.4",
+    "chai-spies": "^1.0.0",
+    "eslint": "^8.3.0",
+    "eslint-config-htmlacademy": "^5.0.0",
+    "mocha": "^9.1.3",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  },
   "keywords": [
     "list",
     "buffer",
@@ -14,14 +31,50 @@
     "performance",
     "dom"
   ],
-  "main": "./vlist.js.js",
+  "main": "./dist/index.js",
   "bugs": {
-    "url": "https://github.com/sergi/virtual-list/issues"
+    "url": "https://github.com/Mx-Wolf/virtual-list/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sergi/virtual-list.git"
+    "url": "https://github.com/Mx-Wolf/virtual-list.git"
   },
-  "author": "Sergi Mansilla <sergi.mansilla@gmail.com>",
-  "license": "MIT"
+  "author": "Sergi Mansilla <sergi.mansilla@gmail.com>, Maxim Volkov <mx_ruz_net@hotmail.com>",
+  "license": "MIT",
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "env": {
+      "es2020": true,
+      "browser": true
+    },
+    "extends": [
+      "htmlacademy/vanilla",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {}
+  },
+  "files": [
+    "/dist/**/*"
+  ],
+  "mocha": {
+    "loader": "ts-node/esm",
+    "extensions": [
+      "ts",
+      "tsx"
+    ],
+    "spec": [
+      "src/**/*.test.*"
+    ],
+    "watch-files": [
+      "src"
+    ]
+  }
 }
